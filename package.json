@@ -1,0 +1,15 @@
+{
+  "name": "hey",
+  "version": "1.0.0",
+  "repository": "https://github.com/renli-tech/Hey.git",
+  "author": "Ope Abidemi Harry <opeabidemi@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start:server": "yarn run server/start",
+    "start:expo": "yarn run app/start"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2"
+  }
+}
