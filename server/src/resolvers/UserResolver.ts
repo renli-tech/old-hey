@@ -1,8 +1,9 @@
 import { User } from "../entity/User";
-import { Arg, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
+import { Arg, Field, Mutation, ObjectType, PubSub, PubSubEngine, Query, Resolver } from "type-graphql";
 import { CheckIfUserAlreadyExist } from "../helpers/authHelpers";
 import { AuthenticationError } from "apollo-server-errors";
 import { compare, hash } from "bcryptjs";
+import { createAccessToken, createRefreshToken } from "../helpers/tokenHelpers";
 
 
 @ObjectType()
@@ -10,6 +11,12 @@ class AuthResponse {
 
     @Field()
     user: User
+
+    @Field()
+    accessToken: string;
+
+    @Field()
+    refreshToken: string;
 }
 
 @Resolver(User)
@@ -27,6 +34,7 @@ class UserResolver {
         @Arg("fullname") fullname: string,
         @Arg("email") email: string,
         @Arg("password") password: string,
+        @PubSub() pubSub: PubSubEngine
     ): Promise<AuthResponse> {
         const alreadyExist = await CheckIfUserAlreadyExist(email);
 
@@ -39,16 +47,22 @@ class UserResolver {
         const user = new User({ fullname, email, password: hashedPassword });
         
         await user.save();
+
+
+        pubSub.publish("USERS", await User.find({}));
         
         return {
-            user
+            user,
+            accessToken: createAccessToken(user),
+            refreshToken : createRefreshToken(user)
         }
     }
 
     @Mutation(() => AuthResponse)
     async login(
         @Arg("email") email: string,
-        @Arg("password") password : string
+        @Arg("password") password : string,
+        @PubSub() pubSub: PubSubEngine
     ): Promise<AuthResponse> {
         const exists = await CheckIfUserAlreadyExist(email);
 
@@ -68,8 +82,12 @@ class UserResolver {
             throw new AuthenticationError("Incorrect Password");
         }
 
+        pubSub.publish("USERS", await User.find({}));
+
         return {
-            user : user
+            user : user,
+            accessToken: createAccessToken(user),
+            refreshToken : createRefreshToken(user)
         }
 
     }

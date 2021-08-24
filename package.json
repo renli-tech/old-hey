@@ -6,10 +6,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start:server": "yarn run server/start",
-    "start:expo": "yarn run app/start"
+    "start:server": "cd server && yarn run start",
+    "start:expo": "cd app && yarn run start"
   },
   "devDependencies": {
     "prettier": "^2.3.2"
-  }
+  },
+  "dependencies": {}
 }
