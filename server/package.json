@@ -30,7 +30,7 @@
     "reflect-metadata": "^0.1.10",
     "subscriptions-transport-ws": "^0.9.19",
     "type-graphql": "^1.1.1",
-    "typeorm": "0.2.37"
+    "typeorm": "0.2.38"
   },
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts"
