@@ -10,7 +10,7 @@
     "start:expo": "cd app && yarn run start"
   },
   "devDependencies": {
-    "prettier": "^2.3.2"
+    "prettier": "2.4.1"
   },
   "dependencies": {}
 }
